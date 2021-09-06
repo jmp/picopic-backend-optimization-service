@@ -4,7 +4,7 @@ import uuid
 
 import boto3
 
-s3_client = boto3.client("s3", endpoint_url="https://s3.eu-north-1.amazonaws.com")
+s3_client = boto3.client("s3", endpoint_url=f"https://s3.{os.environ['AWS_REGION']}.amazonaws.com")
 
 
 def handler(event, context):
