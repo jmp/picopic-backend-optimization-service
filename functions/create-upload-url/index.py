@@ -1,18 +1,20 @@
-import json
-import os
-import uuid
+from json import dumps
+from os import environ
+from uuid import uuid4
 
-import boto3
+from boto3 import client
 
-s3_client = boto3.client("s3", endpoint_url=f"https://s3.{os.environ['AWS_REGION']}.amazonaws.com")
+s3_client = client(
+    "s3", endpoint_url=f"https://s3.{environ['AWS_REGION']}.amazonaws.com"
+)
 
 
 def handler(event, context):
     url = s3_client.generate_presigned_post(
-        Bucket=os.environ["BUCKET"],
-        Key=uuid.uuid4().hex,
+        Bucket=environ["BUCKET"],
+        Key=uuid4().hex,
         Fields=None,
         Conditions=[["content-length-range", 1, 5_242_880]],
         ExpiresIn=10,
     )
-    return {"statusCode": 200, "body": json.dumps(url)}
+    return {"statusCode": 200, "body": dumps(url)}

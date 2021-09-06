@@ -1,22 +1,22 @@
-import json
-import logging
-import os
+from json import dumps
+from logging import INFO, getLogger
+from os import environ
 from typing import Optional
 
-import boto3
-import zopfli
+from boto3 import client
 from botocore.client import Config
+from zopfli import ZopfliPNG
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-s3_client = boto3.client("s3", config=Config(s3={"addressing_style": "path"}))
+logger = getLogger()
+logger.setLevel(INFO)
+s3_client = client("s3", config=Config(s3={"addressing_style": "path"}))
 
 PNG_HEADER = bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
 ALLOWED_FILE_TYPES = {"image/png": "png"}
 
 
 def handler(event, context):
-    bucket = os.environ["BUCKET"]
+    bucket = environ["BUCKET"]
     key = event["pathParameters"]["key"]
     logger.info("Getting object %s from bucket %s.", key, bucket)
     original_object = s3_client.get_object(Bucket=bucket, Key=key)
@@ -31,7 +31,7 @@ def handler(event, context):
         logger.info("Invalid object %s deleted.", key)
         return {
             "statusCode": 400,
-            "body": json.dumps({"message": "File type not allowed."}),
+            "body": dumps({"message": "File type not allowed."}),
         }
     logger.info("File type detected as %s.", mime)
     logger.info("Optimizing %s bytes...", len(body))
@@ -39,7 +39,7 @@ def handler(event, context):
     if optimized_body is None:
         return {
             "statusCode": 400,
-            "body": json.dumps({"message": "Image could not be optimized."}),
+            "body": dumps({"message": "Image could not be optimized."}),
         }
     logger.info("Optimized to %s bytes.", len(optimized_body))
     logger.info("Putting optimized object %s to bucket %s.", key, bucket)
@@ -56,7 +56,7 @@ def handler(event, context):
         ExpiresIn=10,
     )
     logger.info("Presigned URL created; returning successfully.")
-    return {"statusCode": 200, "body": json.dumps({"url": url})}
+    return {"statusCode": 200, "body": dumps({"url": url})}
 
 
 def _guess_mime_type(data: bytes) -> str:
@@ -67,7 +67,7 @@ def _guess_mime_type(data: bytes) -> str:
 
 def _optimize(data: bytes) -> Optional[bytes]:
     try:
-        png = zopfli.ZopfliPNG()
+        png = ZopfliPNG()
         optimized_data = png.optimize(data)
         if optimized_data[:8] != PNG_HEADER:
             logger.error("Invalid optimized image: %s", optimized_data)
