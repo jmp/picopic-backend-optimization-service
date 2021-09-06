@@ -25,7 +25,7 @@ export class OptimizationServiceStack extends cdk.Stack {
     });
 
     const createUploadUrlFunction = new python.PythonFunction(this, 'PicopicCreateUploadUrlFunction', {
-      entry: 'functions/create-upload-url',
+      entry: 'functions/create_upload_url',
       environment: {BUCKET: bucket.bucketName},
       timeout: cdk.Duration.seconds(10),
       runtime: lambda.Runtime.PYTHON_3_8,
@@ -33,7 +33,7 @@ export class OptimizationServiceStack extends cdk.Stack {
     bucket.grantPut(createUploadUrlFunction);
 
     const createDownloadUrlFunction = new python.PythonFunction(this, 'PicopicCreateDownloadUrlFunction', {
-      entry: 'functions/create-download-url',
+      entry: 'functions/create_download_url',
       environment: {BUCKET: bucket.bucketName},
       timeout: cdk.Duration.seconds(10),
       runtime: lambda.Runtime.PYTHON_3_8,

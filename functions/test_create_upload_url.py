@@ -18,7 +18,7 @@ def mock_aws():
 @mock_s3
 @patch.dict(environ, {"BUCKET": "test_bucket", "AWS_REGION": "us-east-1"})
 def test_handler(mock_aws):
-    from index import handler
+    from create_upload_url.index import handler
 
     response = handler({}, {})
     body = loads(response["body"])

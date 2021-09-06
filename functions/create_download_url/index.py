@@ -37,6 +37,7 @@ def handler(event, context):
     logger.info("Optimizing %s bytes...", len(body))
     optimized_body = _optimize(body)
     if optimized_body is None:
+        s3_client.delete_object(Bucket=bucket, Key=key)
         return {
             "statusCode": 400,
             "body": dumps({"message": "Image could not be optimized."}),
@@ -45,13 +46,13 @@ def handler(event, context):
     logger.info("Putting optimized object %s to bucket %s.", key, bucket)
     s3_client.put_object(Bucket=bucket, Key=key, Body=optimized_body)
     logger.info("Generating presigned URL.")
-    download_filename = f"optimized.{ALLOWED_FILE_TYPES[mime]}"
+    filename = f"optimized.{ALLOWED_FILE_TYPES[mime]}"
     url = s3_client.generate_presigned_url(
         "get_object",
         Params={
             "Bucket": bucket,
             "Key": key,
-            "ResponseContentDisposition": f"attachment; filename={download_filename}",
+            "ResponseContentDisposition": f"attachment; filename={filename}",
         },
         ExpiresIn=10,
     )
@@ -67,8 +68,7 @@ def _guess_mime_type(data: bytes) -> str:
 
 def _optimize(data: bytes) -> Optional[bytes]:
     try:
-        png = ZopfliPNG()
-        optimized_data = png.optimize(data)
+        optimized_data = ZopfliPNG().optimize(data)
         if optimized_data[:8] != PNG_HEADER:
             logger.error("Invalid optimized image: %s", optimized_data)
             raise ValueError("Corrupted PNG generated.")

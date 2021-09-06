@@ -42,7 +42,7 @@ def s3(aws_credentials):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_download_url_when_image_is_valid(s3):
-    from index import handler
+    from create_download_url.index import handler
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
@@ -63,7 +63,7 @@ def test_handler_returns_download_url_when_image_is_valid(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_file_type_is_forbidden(s3):
-    from index import handler
+    from create_download_url.index import handler
 
     # Given that a file of forbidden type exists in the bucket
     bucket = environ["BUCKET"]
@@ -85,7 +85,7 @@ def test_handler_returns_error_when_file_type_is_forbidden(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_optimization_fails(s3):
-    from index import handler
+    from create_download_url.index import handler
 
     # Given that an corrupted image of allowed type exists in the bucket
     bucket = environ["BUCKET"]

@@ -1,4 +1,7 @@
+-r create_download_url/requirements.txt
+-r create_upload_url/requirements.txt
 pytest==6.2.5
 isort==5.9.3
 black==21.8b0
+flake8==3.9.2
 moto[s3]==2.2.6
