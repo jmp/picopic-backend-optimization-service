@@ -1,14 +1,12 @@
-# Welcome to your CDK TypeScript project!
+# picopic-backend-optimization-service
 
-This is a blank project for TypeScript development with CDK.
+This is an image optimization service for the Picopic backend.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+It consists of [AWS Lambda](https://aws.amazon.com/lambda/) functions
+for uploading images to [Amazon S3](https://aws.amazon.com/s3/), then
+downloading the optimized images, using S3 pre-signed URLs.
 
-## Useful commands
+The infrastructure for the backend can be found in the [picopic-backend-infrastructure][1]
+repository.
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+[1]: https://github.com/jmp/picopic-backend-infrastructure
