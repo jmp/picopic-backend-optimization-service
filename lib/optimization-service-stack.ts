@@ -37,6 +37,7 @@ export class OptimizationServiceStack extends cdk.Stack {
       environment: {BUCKET: bucket.bucketName},
       timeout: cdk.Duration.seconds(10),
       runtime: lambda.Runtime.PYTHON_3_8,
+      memorySize: 1024,
     });
     bucket.grantReadWrite(createDownloadUrlFunction);
 
