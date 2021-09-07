@@ -14,7 +14,7 @@ def handler(event, context):
         Bucket=environ["BUCKET"],
         Key=uuid4().hex,
         Fields=None,
-        Conditions=[["content-length-range", 1, 5_242_880]],
+        Conditions=[["content-length-range", 1, 1_048_576]],
         ExpiresIn=10,
     )
     return {"statusCode": 200, "body": dumps(url)}
