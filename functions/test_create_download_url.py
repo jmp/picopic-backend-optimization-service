@@ -103,3 +103,20 @@ def test_handler_returns_error_when_optimization_fails(s3):
     with raises(ClientError) as exception_info:
         s3.get_object(Bucket=bucket, Key=key)
     assert exception_info.typename == "NoSuchKey"
+
+
+@patch.dict(environ, {"BUCKET": TEST_BUCKET})
+def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
+    from create_download_url.index import handler
+
+    # Given that the image does not exist in the bucket
+    bucket = environ["BUCKET"]
+    key = "2d5214cd20fa4d20897b3d24c2f8398d"
+
+    # When the handler is run
+    response = handler({"pathParameters": {"key": key}}, {})
+
+    # Then the request should return status code 404 with error message
+    body = loads(response["body"])
+    assert response["statusCode"] == 404
+    assert body == {"message": "Image does not exist."}
