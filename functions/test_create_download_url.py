@@ -110,7 +110,6 @@ def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
     from create_download_url.index import handler
 
     # Given that the image does not exist in the bucket
-    bucket = environ["BUCKET"]
     key = "2d5214cd20fa4d20897b3d24c2f8398d"
 
     # When the handler is run
