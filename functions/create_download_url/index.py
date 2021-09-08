@@ -49,7 +49,7 @@ def handler(event, context):
 
 
 def _guess_mime_type(data: bytes) -> str:
-    if data[:8] == PNG_HEADER:
+    if data.startswith(PNG_HEADER):
         return "image/png"
     return "application/octet-stream"
 
@@ -57,7 +57,7 @@ def _guess_mime_type(data: bytes) -> str:
 def _optimize(data: bytes) -> Optional[bytes]:
     try:
         optimized_data = ZopfliPNG().optimize(data)
-        if optimized_data[:8] != PNG_HEADER:
+        if not optimized_data.startswith(PNG_HEADER):
             raise ValueError("Corrupted PNG generated.")
         return optimized_data
     except ValueError:
