@@ -49,17 +49,16 @@ def handler(event, context):
 
 
 def _guess_mime_type(data: bytes) -> str:
+    """Returns the MIME type based on magic bytes."""
     if data.startswith(PNG_HEADER):
         return "image/png"
     return "application/octet-stream"
 
 
 def _optimize(data: bytes) -> Optional[bytes]:
+    """Optimizes the given image."""
     try:
-        optimized_data = ZopfliPNG().optimize(data)
-        if not optimized_data.startswith(PNG_HEADER):
-            raise ValueError("Corrupted PNG generated.")
-        return optimized_data
+        return ZopfliPNG().optimize(data)
     except ValueError:
         logger.exception("Failed to optimize image.")
         return None
