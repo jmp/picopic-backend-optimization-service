@@ -18,6 +18,7 @@ jobs:
       with:
         path: ~/.cache/pip
         key: ${{ hashFiles('functions/requirements-dev.txt') }}
+    - run: pip install wheel
     - run: pip install -r functions/requirements-dev.txt
     - run: black functions
     - run: isort functions

@@ -1,5 +1,4 @@
 -r create_download_url/requirements.txt
-wheel==0.37.0
 pytest==6.2.5
 isort==5.9.3
 black==21.8b0
