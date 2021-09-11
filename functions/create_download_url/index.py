@@ -40,7 +40,10 @@ def handler(event, context):
 
     # Overwrite the original image with the optimized one
     s3_client.put_object(
-        Bucket=bucket, Key=key, Body=optimized_body, Metadata={"optimized": "true"}
+        Bucket=bucket,
+        Key=key,
+        Body=optimized_body,
+        Metadata={"optimized": "true"},
     )
 
     # Generate presigned URL for downloading the file from S3
@@ -57,9 +60,7 @@ def _get_object_by_key(key: str, bucket: str) -> Optional[bytes]:
         obj = s3_client.get_object(Bucket=bucket, Key=key)
         # Don't allow downloading already downloaded or to old images
         is_optimized = "optimized" in obj["Metadata"]
-        if is_optimized or obj["LastModified"] < datetime.now(timezone.utc) - timedelta(
-            seconds=5
-        ):
+        if is_optimized or obj["LastModified"] < _five_seconds_ago():
             s3_client.delete_object(Bucket=bucket, Key=key)
             return None
     except ClientError as e:
@@ -68,6 +69,10 @@ def _get_object_by_key(key: str, bucket: str) -> Optional[bytes]:
         raise
     body = obj["Body"].read()
     return body
+
+
+def _five_seconds_ago() -> datetime:
+    return datetime.now(timezone.utc) - timedelta(seconds=5)
 
 
 def _create_download_url(key: str, bucket: str, mime: str) -> dict:

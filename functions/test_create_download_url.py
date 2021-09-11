@@ -133,7 +133,11 @@ def test_handler_returns_error_when_image_is_expired(s3):
 
     # When the handler is run
     with patch("create_download_url.index.datetime") as mock_date:
-        mock_date.now = lambda _: datetime.now(timezone.utc) + timedelta(seconds=6)
+
+        def mock_now(_):
+            return datetime.now(timezone.utc) + timedelta(seconds=6)
+
+        mock_date.now = mock_now
         response = handler({"pathParameters": {"key": key}}, {})
 
     # Then the request should return status code 404 with error message
