@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from json import dumps
 from logging import INFO, getLogger
 from os import environ
@@ -38,7 +39,9 @@ def handler(event, context):
         return _error("Image could not be optimized.")
 
     # Overwrite the original image with the optimized one
-    s3_client.put_object(Bucket=bucket, Key=key, Body=optimized_body)
+    s3_client.put_object(
+        Bucket=bucket, Key=key, Body=optimized_body, Metadata={"optimized": "true"}
+    )
 
     # Generate presigned URL for downloading the file from S3
     url = _create_download_url(key, bucket, mime)
@@ -52,6 +55,13 @@ def handler(event, context):
 def _get_object_by_key(key: str, bucket: str) -> Optional[bytes]:
     try:
         obj = s3_client.get_object(Bucket=bucket, Key=key)
+        # Don't allow downloading already downloaded or to old images
+        is_optimized = "optimized" in obj["Metadata"]
+        if is_optimized or obj["LastModified"] < datetime.now(timezone.utc) - timedelta(
+            seconds=5
+        ):
+            s3_client.delete_object(Bucket=bucket, Key=key)
+            return None
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
             return None

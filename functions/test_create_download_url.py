@@ -1,4 +1,5 @@
 from base64 import b64decode
+from datetime import datetime, timedelta, timezone
 from json import loads
 from os import environ
 from unittest.mock import patch
@@ -119,3 +120,50 @@ def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
     body = loads(response["body"])
     assert response["statusCode"] == 404
     assert body == {"message": "Image does not exist."}
+
+
+@patch.dict(environ, {"BUCKET": TEST_BUCKET})
+def test_handler_returns_error_when_image_is_expired(s3):
+    from create_download_url.index import handler
+
+    # Given that a valid test image exists in the bucket
+    bucket = environ["BUCKET"]
+    key = "12291fe6b53c4527846370a70f93ba0f"
+    s3.put_object(Bucket=bucket, Key=key, Body=UNOPTIMIZED_TEST_IMAGE)
+
+    # When the handler is run
+    with patch("create_download_url.index.datetime") as mock_date:
+        mock_date.now = lambda _: datetime.now(timezone.utc) + timedelta(seconds=6)
+        response = handler({"pathParameters": {"key": key}}, {})
+
+    # Then the request should return status code 404 with error message
+    body = loads(response["body"])
+    assert response["statusCode"] == 404
+    assert body == {"message": "Image does not exist."}
+    # The object should have been deleted
+    with raises(ClientError) as exception_info:
+        s3.get_object(Bucket=bucket, Key=key)
+    assert exception_info.typename == "NoSuchKey"
+
+
+@patch.dict(environ, {"BUCKET": TEST_BUCKET})
+def test_handler_returns_error_when_image_is_already_optimized(s3):
+    from create_download_url.index import handler
+
+    # Given that a valid test image exists in the bucket
+    bucket = environ["BUCKET"]
+    key = "7e4fbc7466734dce976fd0d67edd69dc"
+    s3.put_object(Bucket=bucket, Key=key, Body=UNOPTIMIZED_TEST_IMAGE)
+
+    # When the handler is run twice
+    handler({"pathParameters": {"key": key}}, {})
+    response = handler({"pathParameters": {"key": key}}, {})
+
+    # Then the request should return status code 404 with error message
+    body = loads(response["body"])
+    assert response["statusCode"] == 404
+    assert body == {"message": "Image does not exist."}
+    # The object should have been deleted
+    with raises(ClientError) as exception_info:
+        s3.get_object(Bucket=bucket, Key=key)
+    assert exception_info.typename == "NoSuchKey"
