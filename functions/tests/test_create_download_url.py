@@ -43,7 +43,7 @@ def s3(aws_credentials):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_download_url_when_image_is_valid(s3):
-    from create_download_url.index import handler
+    from ..create_download_url.index import handler
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
@@ -64,7 +64,7 @@ def test_handler_returns_download_url_when_image_is_valid(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_file_type_is_forbidden(s3):
-    from create_download_url.index import handler
+    from ..create_download_url.index import handler
 
     # Given that a file of forbidden type exists in the bucket
     bucket = environ["BUCKET"]
@@ -86,7 +86,7 @@ def test_handler_returns_error_when_file_type_is_forbidden(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_optimization_fails(s3):
-    from create_download_url.index import handler
+    from ..create_download_url.index import handler
 
     # Given that an corrupted image of allowed type exists in the bucket
     bucket = environ["BUCKET"]
@@ -108,7 +108,7 @@ def test_handler_returns_error_when_optimization_fails(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
-    from create_download_url.index import handler
+    from ..create_download_url.index import handler
 
     # Given that the image does not exist in the bucket
     key = "2d5214cd20fa4d20897b3d24c2f8398d"
@@ -124,7 +124,7 @@ def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_image_is_expired(s3):
-    from create_download_url.index import handler
+    from ..create_download_url.index import handler
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
@@ -132,7 +132,7 @@ def test_handler_returns_error_when_image_is_expired(s3):
     s3.put_object(Bucket=bucket, Key=key, Body=UNOPTIMIZED_TEST_IMAGE)
 
     # When the handler is run
-    with patch("create_download_url.index.datetime") as mock_date:
+    with patch(f"{handler.__module__}.datetime") as mock_date:
 
         def mock_now(_):
             return datetime.now(timezone.utc) + timedelta(seconds=6)
@@ -152,7 +152,7 @@ def test_handler_returns_error_when_image_is_expired(s3):
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
 def test_handler_returns_error_when_image_is_already_optimized(s3):
-    from create_download_url.index import handler
+    from ..create_download_url.index import handler
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
