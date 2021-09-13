@@ -11,6 +11,8 @@ export class OptimizationServiceStack extends cdk.Stack {
 
     const bucket = new s3.Bucket(this, 'PicopicImageOptimizationBucket', {
       bucketName: 'picopic-images',
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
       cors: [{
         allowedOrigins: ['https://picopic.io'],
         allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.POST],
