@@ -30,7 +30,7 @@ export class OptimizationServiceStack extends cdk.Stack {
       entry: 'functions/create_upload_url',
       environment: {BUCKET: bucket.bucketName},
       timeout: cdk.Duration.seconds(10),
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.PYTHON_3_9,
     });
     bucket.grantPut(createUploadUrlFunction);
 
@@ -38,7 +38,7 @@ export class OptimizationServiceStack extends cdk.Stack {
       entry: 'functions/create_download_url',
       environment: {BUCKET: bucket.bucketName},
       timeout: cdk.Duration.seconds(10),
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.PYTHON_3_9,
       memorySize: 1024,
     });
     bucket.grantReadWrite(createDownloadUrlFunction);
