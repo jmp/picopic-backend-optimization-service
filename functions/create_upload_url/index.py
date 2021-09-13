@@ -1,6 +1,6 @@
 from json import dumps
 from os import environ
-from uuid import uuid4
+from secrets import token_urlsafe
 
 from boto3 import client
 
@@ -12,7 +12,7 @@ s3_client = client(
 def handler(event, context):
     url = s3_client.generate_presigned_post(
         Bucket=environ["BUCKET"],
-        Key=uuid4().hex,
+        Key=token_urlsafe(),
         Fields=None,
         Conditions=[["content-length-range", 1, 1_048_576]],
         ExpiresIn=10,

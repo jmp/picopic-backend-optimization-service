@@ -47,7 +47,7 @@ def test_handler_returns_download_url_when_image_is_valid(s3):
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
-    key = "1a2d894fed4b40f695bf44f8f645c233"
+    key = "vZQKe6V99OIvjvD49ryulOmQ-K--yERJkYH-pUthswY"
     s3.put_object(Bucket=bucket, Key=key, Body=UNOPTIMIZED_TEST_IMAGE)
 
     # When the handler is run
@@ -68,7 +68,7 @@ def test_handler_returns_error_when_file_type_is_forbidden(s3):
 
     # Given that a file of forbidden type exists in the bucket
     bucket = environ["BUCKET"]
-    key = "bb6c2b439fa846d4983f00cc6de47a41"
+    key = "QAxNevojI59t1ANe591KXswQ1D-rLoBBg6UCOglxBYE"
     s3.put_object(Bucket=bucket, Key=key, Body=b"invalid")
 
     # When the handler is run
@@ -90,7 +90,7 @@ def test_handler_returns_error_when_optimization_fails(s3):
 
     # Given that an corrupted image of allowed type exists in the bucket
     bucket = environ["BUCKET"]
-    key = "8b6a7d55e1ad440bb84eee2cf5773522"
+    key = "YaM7ZYdM5sAf40j1wwBbd8fd9e7w5pSNaGij8Xk2UWo"
     s3.put_object(Bucket=bucket, Key=key, Body=INVALID_TEST_IMAGE)
 
     # When the handler is run
@@ -111,7 +111,7 @@ def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
     from ..create_download_url.index import handler
 
     # Given that the image does not exist in the bucket
-    key = "2d5214cd20fa4d20897b3d24c2f8398d"
+    key = "YmP7vNzDUT_xBjwhyFZxYmFDhZdj1k7XHCbocCw6QEI"
 
     # When the handler is run
     response = handler({"pathParameters": {"key": key}}, {})
@@ -128,7 +128,7 @@ def test_handler_returns_error_when_image_is_expired(s3):
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
-    key = "12291fe6b53c4527846370a70f93ba0f"
+    key = "Hmipbd31mKqG6M852Hx5pqBwlpM_wQTE33WJtcZs_4w"
     s3.put_object(Bucket=bucket, Key=key, Body=UNOPTIMIZED_TEST_IMAGE)
 
     # When the handler is run
@@ -156,7 +156,7 @@ def test_handler_returns_error_when_image_is_already_optimized(s3):
 
     # Given that a valid test image exists in the bucket
     bucket = environ["BUCKET"]
-    key = "7e4fbc7466734dce976fd0d67edd69dc"
+    key = "PuSt8WpEoi_lxlkIphkp69_rmc0RPvX4SxBTurLQk5s"
     s3.put_object(Bucket=bucket, Key=key, Body=UNOPTIMIZED_TEST_IMAGE)
 
     # When the handler is run twice
