@@ -32,3 +32,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  trigger-e2e-tests:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - run: |
+           curl -X POST \
+                -u "${{ secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Content-Type: application/json" \
+                "https://api.github.com/repos/jmp/picopic-e2e-tests/actions/workflows/tests.yaml/dispatches" \
+                -d '{"ref": "master"}'
