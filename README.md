@@ -2,7 +2,7 @@
 
 [![build](https://github.com/jmp/picopic-backend-optimization-service/actions/workflows/build.yml/badge.svg)](https://github.com/jmp/picopic-backend-optimization-service/actions/workflows/build.yml)
 
-This is an image optimization service for the Picopic backend.
+This is an image optimization service for [Picopic](https://github.com/jmp/picopic).
 
 It consists of [AWS Lambda](https://aws.amazon.com/lambda/) functions
 for uploading images to [Amazon S3](https://aws.amazon.com/s3/), then
