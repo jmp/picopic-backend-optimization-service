@@ -37,7 +37,7 @@ export class OptimizationServiceStack extends cdk.Stack {
     const createDownloadUrlFunction = new python.PythonFunction(this, 'PicopicCreateDownloadUrlFunction', {
       entry: 'functions/create_download_url',
       environment: {BUCKET: bucket.bucketName},
-      timeout: cdk.Duration.seconds(10),
+      timeout: cdk.Duration.seconds(20),
       runtime: lambda.Runtime.PYTHON_3_9,
       memorySize: 1024,
     });
