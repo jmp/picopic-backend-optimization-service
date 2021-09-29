@@ -35,9 +35,13 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ hashFiles('functions/requirements-dev.txt') }}
-      - run: pip install wheel
+      - run: pip install wheel pytest-cov
       - run: pip install -r functions/requirements-dev.txt
-      - run: pytest functions
+      - run: pytest functions --cov=functions --cov-report=xml
+      - uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
   deploy:
     needs: [lint, test]
     runs-on: ubuntu-latest
