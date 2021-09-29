@@ -63,5 +63,5 @@ jobs:
                 -u "${{ secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" \
                 -H "Accept: application/vnd.github.v3+json" \
                 -H "Content-Type: application/json" \
-                "https://api.github.com/repos/jmp/picopic-e2e-tests/actions/workflows/e2e-tests.yaml/dispatches" \
+                "https://api.github.com/repos/jmp/picopic-e2e-tests/actions/workflows/e2e-tests.yml/dispatches" \
                 -d '{"ref": "master"}'
