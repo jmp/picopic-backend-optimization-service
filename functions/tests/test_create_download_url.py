@@ -7,6 +7,7 @@ from unittest.mock import patch
 import boto3
 from botocore.exceptions import ClientError
 from moto import mock_s3
+from moto.core import set_initial_no_auth_action_count
 from pytest import fixture, raises
 
 TEST_BUCKET = "test_bucket"
@@ -120,6 +121,22 @@ def test_handler_returns_error_when_unoptimized_image_does_not_exist(s3):
     body = loads(response["body"])
     assert response["statusCode"] == 404
     assert body == {"message": "Image does not exist."}
+
+
+@set_initial_no_auth_action_count(0)
+@patch.dict(environ, {"BUCKET": TEST_BUCKET})
+def test_handler_raises_error_if_access_to_bucket_is_denied(s3):
+    from ..create_download_url.index import handler
+
+    # Given an image key that causes error
+    key = "ZffNXuR8fdV2E6ouhfK3Xt1hUbID1vc3XhgDf9jhEX4"
+
+    # When the handler is run
+    with raises(ClientError) as exception_info:
+        handler({"pathParameters": {"key": key}}, {})
+
+    # A client error should have been raised
+    assert exception_info.typename == "ClientError"
 
 
 @patch.dict(environ, {"BUCKET": TEST_BUCKET})
