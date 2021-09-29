@@ -1,6 +1,7 @@
 # picopic-backend-optimization-service
 
 [![build](https://github.com/jmp/picopic-backend-optimization-service/actions/workflows/build.yml/badge.svg)](https://github.com/jmp/picopic-backend-optimization-service/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/jmp/picopic-backend-optimization-service/branch/master/graph/badge.svg?token=8W22T4CZ2U)](https://codecov.io/gh/jmp/picopic-backend-optimization-service)
 [![e2e-tests](https://github.com/jmp/picopic-e2e-tests/actions/workflows/e2e-tests.yml/badge.svg?event=workflow_dispatch)](https://github.com/jmp/picopic-e2e-tests/actions/workflows/e2e-tests.yml)
 
 This is an image optimization service for [Picopic](https://github.com/jmp/picopic).
